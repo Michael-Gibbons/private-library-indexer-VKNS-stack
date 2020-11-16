@@ -1,0 +1,30 @@
+{
+  "name": "private-library-indexer-VKNS-stack",
+  "version": "1.0.0",
+  "description": "initial commit",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "nodemon server/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Michael-Gibbons/private-library-indexer-VKNS-stack.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Michael-Gibbons/private-library-indexer-VKNS-stack/issues"
+  },
+  "homepage": "https://github.com/Michael-Gibbons/private-library-indexer-VKNS-stack#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "koa": "^2.13.0",
+    "koa-body-parser": "^1.1.2",
+    "koa-router": "^10.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.6"
+  }
+}
