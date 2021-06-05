@@ -1,6 +1,6 @@
 const Koa = require('koa');
 const KoaRouter = require('koa-router');
-const cors = require('cors');
+const cors = require('@koa/cors');
 const recordRoutes = require('./routes/api/v1/records');
 
 const app = new Koa();
@@ -9,7 +9,7 @@ app
   .use(recordRoutes.routes())
   .use(router.routes())
   .use(router.allowedMethods())
-  .use(cors());
+  .use(cors({credentials: true, origin: true}));
 
 
 router.get('/', ctx => ctx.body ='Hello world');

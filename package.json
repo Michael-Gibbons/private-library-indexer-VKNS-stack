@@ -19,7 +19,7 @@
   },
   "homepage": "https://github.com/Michael-Gibbons/private-library-indexer-VKNS-stack#readme",
   "dependencies": {
-    "cors": "^2.8.5",
+    "@koa/cors": "^3.1.0",
     "koa": "^2.13.0",
     "koa-body-parser": "^1.1.2",
     "koa-router": "^10.0.0"
