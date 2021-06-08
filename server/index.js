@@ -1,22 +1,30 @@
+const fs = require('fs');
 const Koa = require('koa');
 const KoaRouter = require('koa-router');
+const serve  = require('koa-static');
 const cors = require('@koa/cors');
-const dbRoutes = require('./routes/api/v1/db');
+const booksRoutes = require('./routes/api/v1/books');
 
 const app = new Koa();
 const router = new KoaRouter();
 
 const db = require("../models");
 
+app.use(serve('./dist/'));
 
 app
-  .use(dbRoutes.routes())
+  .use(async (ctx, next) => {
+    if(!ctx.request.path.includes('/api/')){
+      ctx.type = 'html';
+      ctx.body = fs.readFileSync('./dist/index.html');
+    }
+    await next();
+  })
+  .use(booksRoutes.routes())
   .use(router.routes())
   .use(router.allowedMethods())
   .use(cors({credentials: true, origin: true}));
 
-
-router.get('/', ctx => ctx.body ='Hello world');
 
 const port = process.env.PORT || 3000
 db.sequelize.sync().then(async (req) => {
