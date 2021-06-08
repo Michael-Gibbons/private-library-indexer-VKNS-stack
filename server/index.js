@@ -10,9 +10,8 @@ const router = new KoaRouter();
 
 const db = require("../models");
 
-app.use(serve('./dist/'));
-
 app
+  .use(serve('./dist/'))
   .use(async (ctx, next) => {
     if(!ctx.request.path.includes('/api/')){
       ctx.type = 'html';
@@ -25,6 +24,15 @@ app
   .use(router.allowedMethods())
   .use(cors({credentials: true, origin: true}));
 
+
+app.on('error', (err, ctx) => {
+  /* centralized error handling:
+    *   console.log error
+    *   write error to log file
+    *   save error and request information to database if ctx.request match condition
+    *   ...
+  */
+});
 
 const port = process.env.PORT || 3000
 db.sequelize.sync().then(async (req) => {

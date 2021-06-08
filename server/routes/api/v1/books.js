@@ -5,13 +5,19 @@ const { Books } = require('../../../../models');
 
 //get book
 router.get('/books/:isbn', async ctx => {
-  const book = await Books.findOne({ where: { isbn: ctx.params.isbn } });
-  if (book === null) {
-    ctx.status = 404;
-    ctx.body = {error: {message: `No book in database with ISBN: ${ctx.params.isbn}` }};
-  } else {
+  try{
+    const book = await Books.findOne({ where: { isbn: ctx.params.isbn } });
+    if (book === null) {
+      ctx.status = 404;
+      ctx.response.body = {error: {message: `No book in database with ISBN: ${ctx.params.isbn}` }};
+      return;
+    }
+
     ctx.status = 200;
     ctx.response.body = book;
+
+  }catch(err){
+    ctx.app.emit('error', err, ctx);
   }
 });
 //get books
@@ -36,9 +42,9 @@ router.post('/books', async ctx => {
   if(created){
     ctx.status = 201;
     ctx.response.body = book;
-  }else{
-    ctx.throw(409, 'duplicate ISBN found.');
+    return;
   }
+  ctx.throw(409, 'duplicate ISBN found.');
 });
 //replace a book's data PUT /books/:id
 //update individual fields PATCH /books/:id
