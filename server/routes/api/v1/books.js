@@ -3,6 +3,8 @@ const router = new KoaRouter({ prefix: '/api/v1' });
 
 const { Books } = require('../../../../models');
 
+const { getDefinedSubset } = require('../../../../util/helpers');
+
 //get book
 router.get('/books/:isbn', async ctx => {
   try{
@@ -46,12 +48,8 @@ router.get('/books', async ctx => {
 
     const offset = (page == 1) ? 0 : limit*(page - 1);
 
-    let query = (({ title, isbn, genre, synopsis, numberOfPages, seriesName, authorName, authorBio }) => ({ title, isbn, genre, synopsis, numberOfPages, seriesName, authorName, authorBio }))(ctx.request.query);
-    Object.keys(query).forEach(key => {
-      if (query[key] === undefined) {
-        delete query[key];
-      }
-    });
+    const ALLOWED_QUERY_PARAMETERS = Object.keys(Books.rawAttributes);
+    const query = getDefinedSubset(ALLOWED_QUERY_PARAMETERS, ctx.request.query);
 
     const books = await Books.findAndCountAll({
       where: query,
