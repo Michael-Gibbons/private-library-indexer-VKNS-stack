@@ -28,6 +28,7 @@ app
 
 
 app.on('error', (err, ctx) => {
+  console.log(err);
   /* centralized error handling:
     *   console.log error
     *   write error to log file

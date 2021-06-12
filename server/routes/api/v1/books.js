@@ -20,15 +20,52 @@ router.get('/books/:isbn', async ctx => {
     ctx.app.emit('error', err, ctx);
   }
 });
+
 //get books
-//.findAndCountAll({
-//   where: {...},
-//   order: [...],
-//   limit: 5,
-//   offset: 0,
-// }).then(function (result) {
-//   res.render(...);
-// });
+router.get('/books', async ctx => {
+  try{
+    const MAX_LIMIT = 100;
+    const DEFAULT_LIMIT = 20;
+
+    let page = ctx.request.query.page;
+    let limit = ctx.request.query.limit;
+
+    if(limit > MAX_LIMIT){
+      ctx.status = 400;
+      ctx.response.body = {error: {message: `A maximum of ${MAX_LIMIT} records per request is allowed.` }};
+      return;
+    }
+
+    if(!page || page < 0 || isNaN(page)){
+      page = 1;
+    }
+
+    if(!limit || isNaN(limit)){
+      limit = DEFAULT_LIMIT;
+    }
+
+    const offset = (page == 1) ? 0 : limit*(page - 1);
+
+    let query = (({ title, isbn, genre, synopsis, numberOfPages, seriesName, authorName, authorBio }) => ({ title, isbn, genre, synopsis, numberOfPages, seriesName, authorName, authorBio }))(ctx.request.query);
+    Object.keys(query).forEach(key => {
+      if (query[key] === undefined) {
+        delete query[key];
+      }
+    });
+
+    const books = await Books.findAndCountAll({
+      where: query,
+      order: ['title'],
+      limit: limit,
+      offset: offset,
+    })
+
+    ctx.response.body = {books: books};
+
+  }catch(err){
+    ctx.app.emit('error', err, ctx);
+  }
+});
 
 //add book
 router.post('/books', async ctx => {
