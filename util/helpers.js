@@ -17,5 +17,15 @@ module.exports = {
       }
     });
     return result;
+  },
+
+  queryFormat(obj){
+    let result = {...obj}
+    Object.keys(result).forEach(key =>{
+      if(typeof(result[key]) === 'string'){
+        result[key] = result[key].toLowerCase();
+      }
+    })
+    return result;
   }
 }

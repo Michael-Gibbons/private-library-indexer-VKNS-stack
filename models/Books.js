@@ -28,8 +28,8 @@ module.exports = (sequelize, DataTypes) => {
         notEmpty: true
       }
     },
-    numberOfPages: {
-      type: DataTypes.STRING,
+    pages: {
+      type: DataTypes.INTEGER,
       allowNull: false,
       validate: {
         notEmpty: true
@@ -56,6 +56,17 @@ module.exports = (sequelize, DataTypes) => {
         notEmpty: true
       }
     }
+  });
+
+  Books.addHook('beforeCreate', (book) => {
+    book.title = book.title.toLowerCase();
+    book.genre = book.genre.toLowerCase();
+    book.synopsis = book.synopsis.toLowerCase();
+    book.seriesName = book.seriesName.toLowerCase();
+    book.authorName = book.authorName.toLowerCase();
+    book.authorBio = book.authorBio.toLowerCase();
+
+    return book;
   });
 
   return Books;
