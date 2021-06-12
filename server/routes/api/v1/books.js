@@ -21,8 +21,18 @@ router.get('/books/:isbn', async ctx => {
   }
 });
 //get books
+//.findAndCountAll({
+//   where: {...},
+//   order: [...],
+//   limit: 5,
+//   offset: 0,
+// }).then(function (result) {
+//   res.render(...);
+// });
+
 //add book
 router.post('/books', async ctx => {
+  //get from ctx.request.body
   const BookToAdd = {
     title: "testTitle",
     isbn: "5",

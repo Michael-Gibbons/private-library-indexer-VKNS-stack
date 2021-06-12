@@ -1,6 +1,7 @@
 const fs = require('fs');
 const Koa = require('koa');
 const KoaRouter = require('koa-router');
+const koaBody = require('koa-body');
 const serve  = require('koa-static');
 const cors = require('@koa/cors');
 const booksRoutes = require('./routes/api/v1/books');
@@ -11,6 +12,7 @@ const router = new KoaRouter();
 const db = require("../models");
 
 app
+  .use(koaBody())
   .use(serve('./dist/'))
   .use(async (ctx, next) => {
     if(!ctx.request.path.includes('/api/')){
