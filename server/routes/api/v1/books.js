@@ -25,7 +25,7 @@ router.get('/books/:isbn', async ctx => {
   }
 });
 
-//get books
+//get book collection
 router.get('/books', pagination(), async ctx => {
   try{
     const ALLOWED_QUERY_PARAMETERS = getAllowedQueryParameters(Books);
@@ -65,13 +65,13 @@ router.post('/books', async ctx => {
 
     ctx.status = 409;
     ctx.response.body = {error: {message: 'duplicate ISBN found.' }};
-    
+
   }catch(err){
     ctx.app.emit('error', err, ctx);
   }
 });
 
-//replace a book's data PATCH /books/:id
+//replace a book's data
 router.patch('/books/:isbn', async ctx => {
   try{
     const ALLOWED_QUERY_PARAMETERS = getAllowedQueryParameters(Books);
