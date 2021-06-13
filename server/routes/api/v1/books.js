@@ -3,6 +3,8 @@ const router = new KoaRouter({ prefix: '/api/v1' });
 
 const { Books } = require('../../../../models');
 
+const { pagination } = require('../../../../middleware/pagination');
+
 const { getDefinedSubset, queryFormat } = require('../../../../util/helpers');
 
 //get book
@@ -24,38 +26,16 @@ router.get('/books/:isbn', async ctx => {
 });
 
 //get books
-router.get('/books', async ctx => {
+router.get('/books', pagination(), async ctx => {
   try{
-    const MAX_LIMIT = 100;
-    const DEFAULT_LIMIT = 20;
-
-    let page = ctx.request.query.page;
-    let limit = ctx.request.query.limit;
-
-    if(limit > MAX_LIMIT){
-      ctx.status = 400;
-      ctx.response.body = {error: {message: `A maximum of ${MAX_LIMIT} records per request is allowed.` }};
-      return;
-    }
-
-    if(!page || page < 0 || isNaN(page)){
-      page = 1;
-    }
-
-    if(!limit || isNaN(limit)){
-      limit = DEFAULT_LIMIT;
-    }
-
-    const offset = (page == 1) ? 0 : limit*(page - 1);
-
     const ALLOWED_QUERY_PARAMETERS = Object.keys(Books.rawAttributes);
     const query = queryFormat(getDefinedSubset(ALLOWED_QUERY_PARAMETERS, ctx.request.query));
 
     const books = await Books.findAndCountAll({
       where: query,
       order: ['title'],
-      limit: limit,
-      offset: offset,
+      limit: ctx.state.limit,
+      offset: ctx.state.offset,
     })
 
     ctx.response.body = {books: books};
@@ -70,10 +50,10 @@ router.post('/books', async ctx => {
   //get from ctx.request.body
   const BookToAdd = {
     title: "testTitle",
-    isbn: "5",
+    isbn: "8",
     genre: "Fantasy",
     synopsis: "Is a pretty good book",
-    numberOfPages: "420",
+    pages: 420,
     seriesName: "Series name",
     authorName: "Michael Gibbons",
     authorBio: "Devilishly Handsome"
