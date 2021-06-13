@@ -27,5 +27,12 @@ module.exports = {
       }
     })
     return result;
+  },
+
+  getAllowedQueryParameters(model, exclusions){
+    if(!exclusions){
+      exclusions = ['id', 'createdAt', 'updatedAt'];
+    }
+    return Object.keys(model.rawAttributes).filter(exclusion => exclusions.indexOf(exclusion) < 0);
   }
 }

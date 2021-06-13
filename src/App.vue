@@ -4,7 +4,8 @@
     <router-link to="/about">
     <font-awesome-icon icon="trash-alt" class="text-red-700"/>
     About
-    </router-link>
+    </router-link> | 
+    <router-link to="/add">Add</router-link>
   </div>
   <div class="bg-purple-500 text-black text-center">
     Test

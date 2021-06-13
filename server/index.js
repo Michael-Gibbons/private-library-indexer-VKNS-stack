@@ -12,7 +12,7 @@ const router = new KoaRouter();
 const db = require("../models");
 
 app
-  .use(koaBody())
+  .use(koaBody({ multipart: true }))
   .use(serve('./dist/'))
   .use(async (ctx, next) => {
     if(!ctx.request.path.includes('/api/')){
